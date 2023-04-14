@@ -9,8 +9,7 @@ let newMoney;
 let substract;
 let listMoney;
 let total = document.getElementById('total')
-let beforeUpdate;
-let afterUpdate;
+var func;
 
 // get totalSallery
 if(localStorage.product3 == 'undefined'){
@@ -61,31 +60,18 @@ submit.addEventListener('click',  function () {
         mood = 'create';
         submit.innerHTML = 'Create';
         count.style.display = 'block'
-        afterUpdate = money.value
-        if(listMoney.length >0){
-            listMoney.unshift(newMoney)
-        }else{
-            listMoney.push(newMoney)
-        }
-        if(beforeUpdate < afterUpdate){
-            result -= +beforeUpdate
-            result += +afterUpdate
-            newProduct -= +beforeUpdate
-            newProduct += +afterUpdate
-            console.log(beforeUpdate)
-            result = newProduct
-            localStorage.product = JSON.stringify(dataPro)   
-            localStorage.product2 = JSON.stringify(newProduct)
-            localStorage.product3 = JSON.stringify(listMoney)
-            
-        }
+        afterUpdate = +money.value
+        newProduct -= afterUpdate
+        result = newProduct
+        localStorage.product = JSON.stringify(dataPro)   
+        localStorage.product2 = JSON.stringify(newProduct)
+        localStorage.product3 = JSON.stringify(listMoney)
     }
     newProduct = newPro.result
     newMoney = newPro.money
     if (mood == 'create'){
         listMoney.push(newMoney)
-    }
-    
+    } 
     localStorage.setItem('product', JSON.stringify(dataPro));
     localStorage.setItem('product2',JSON.stringify (newProduct))
     localStorage.setItem('product3', JSON.stringify( listMoney))
@@ -112,7 +98,6 @@ function showData() {
             <td>${dataPro[i].name}</td>
             <td>${dataPro[i].money}</td>
             <td>${result}</td>
-            <td><button onclick="updateData(${i})" id="update">update</button></td>
             <td><button onclick="deleteData(  ${i}  )" id="delete">delete</button></td>
             
         `;
@@ -134,13 +119,19 @@ function showData() {
 showData()
 //delete
 function deleteData(i) {
-    substract = listMoney[i]
+    if(listMoney[i] === dataPro[i].money){
+        substract = listMoney[i]
+        console.log('done')
+    }
     result -= substract
     dataPro.splice(i, 1)
     newProduct -= substract
     listMoney.splice(i,1)
     if(dataPro.length < 1){
         result = 0
+        localStorage.clear()
+        dataPro.splice(0)
+        showData()
     }
     
     localStorage.product = JSON.stringify(dataPro)   
@@ -159,24 +150,8 @@ function deleteAll() {
     listMoney = []
     showData()
 }
-//update
-function updateData(i) {
-    name.value = dataPro[i].name;
-    money.value = dataPro[i].money;
-    beforeUpdate = money.value = dataPro[i].money;
-    newProduct -= beforeUpdate
-    count.style.display = 'none';
-    listMoney.splice(i,1)
-    submit.innerHTML = 'Update';
-    mood = 'update';
-    temp = i;
-    scroll({
-        top: 0,
-        behavior: 'smooth',
-    })
-    localStorage.product3 = JSON.stringify(listMoney)
-    localStorage.product2 = JSON.stringify(newProduct)
-}
+
+showData()
 //search
 let searchMood = 'name';
 function getSearchMood(id) {
@@ -203,7 +178,6 @@ function searchData(value) {
                 <td>${dataPro[i].name}</td>
                 <td>${dataPro[i].money}</td>
                 <td>${result}</td>
-                <td><button onclick="updateData(${i})" id="update">update</button></td>
                 <td><button onclick="deleteData(  ${i}  )" id="delete">delete</button></td>
             </tr>
                 `;
@@ -222,7 +196,6 @@ function searchData(value) {
                 <td>${dataPro[i].name}</td>
                 <td>${dataPro[i].money}</td>         
                 <td>${result}</td>    
-                <td><button onclick="updateData(${i})" id="update">update</button></td>
                 <td><button onclick="deleteData(  ${i}  )" id="delete">delete</button></td>
             </tr>
                 `;
