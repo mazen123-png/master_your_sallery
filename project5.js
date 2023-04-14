@@ -1,6 +1,5 @@
 let name = document.getElementById('name')
 let money = document.getElementById('money')
-let count = document.getElementById('count');
 let submit = document.getElementById('submit');
 let mood = 'create';
 let temp;
@@ -42,24 +41,16 @@ submit.addEventListener('click',  function () {
     let newPro = {
         name: name.value.toLowerCase(),
         money: money.value,
-        count: count.value,
         result:result += +money.value,
         total: result,
     };
     
     if (mood == 'create') {
-        if (newPro.count > 1) {
-            for (let i = 0; i < newPro.count; i++) {
                 dataPro.push(newPro);
-            }
-        } else {
-            dataPro.push(newPro);
-        }
     } else {
         dataPro[temp] = newPro;
         mood = 'create';
         submit.innerHTML = 'Create';
-        count.style.display = 'block'
         afterUpdate = +money.value
         newProduct -= afterUpdate
         result = newProduct
@@ -82,7 +73,6 @@ submit.addEventListener('click',  function () {
 function clearData() {
     name.value = '';
     money.value = '';
-    count.value = '';
 };
 // update
 //read
@@ -121,7 +111,6 @@ showData()
 function deleteData(i) {
     if(listMoney[i] === dataPro[i].money){
         substract = listMoney[i]
-        console.log('done')
     }
     result -= substract
     dataPro.splice(i, 1)
